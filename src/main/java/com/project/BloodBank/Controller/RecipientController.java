@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.ui.Model;
 
-@Controller
+@RestController
 @RequestMapping("/api/recipients")
 public class RecipientController {
 
@@ -33,11 +32,11 @@ public class RecipientController {
 //        return ResponseEntity.ok(recipientService.registerRecipient(recipient));
 //    }
 
-    @PostMapping("/register")
-    public ResponseEntity<String> registerRecipient(@RequestBody Recipient recipient) {
-        recipientService.registerRecipient(recipient);
-        return ResponseEntity.ok("Recipient added successfully!");
-    }
+//    @PostMapping("/register")
+//    public ResponseEntity<String> registerRecipient(@RequestBody Recipient recipient) {
+//        recipientService.registerRecipient(recipient);
+//        return ResponseEntity.ok("Recipient added successfully!");
+//    }
 
     //  Get all recipients
     @GetMapping("/all")
@@ -107,18 +106,18 @@ public class RecipientController {
         return recipientService.requestBlood(authentication, bloodType, quantity);
     }
 
-    @GetMapping("/blood-request-form")
-    public String showBloodRequestForm(Model model, Authentication authentication) {
-        String username = authentication.getName();
-        Optional<Recipient> recipientOpt = recipientService.getRecipientByUsername(username);
-        
-        if (recipientOpt.isEmpty()) {
-            return "redirect:/recipient-registration"; // Thymeleaf route
-        }
-
-        model.addAttribute("recipient", recipientOpt.get());
-        return "blood-request-form"; // Thymeleaf template
-    }
+//    @GetMapping("/blood-request-form")
+//    public String showBloodRequestForm(Model model, Authentication authentication) {
+//        String username = authentication.getName();
+//        Optional<Recipient> recipientOpt = recipientService.getRecipientByUsername(username);
+//        
+//        if (recipientOpt.isEmpty()) {
+//            return "redirect:/recipient-registration"; // Thymeleaf route
+//        }
+//
+//        model.addAttribute("recipient", recipientOpt.get());
+//        return "blood-request-form"; // Thymeleaf template
+//    }
 
     
     @PutMapping("/update")

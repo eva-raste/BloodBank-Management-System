@@ -61,10 +61,11 @@ this.aiService = aiService; // Initialize the aiService
     
     //Register Recipient
     public Recipient registerRecipient(Recipient recipient) {
-        if (userRepository.findByUsername(recipient.getUsername()).isPresent()) {
-            throw new RuntimeException("Username already exists");
+    	if (recipientRepository.findByUsername(recipient.getUsername()).isPresent()) {
+            throw new RuntimeException("Username already exists as recipient");
         }
 
+        // ✅ Encode password
         recipient.setPassword(passwordEncoder.encode(recipient.getPassword()));
 
         Recipient savedRecipient = recipientRepository.save(recipient);

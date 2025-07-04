@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Request Blood</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<h2>Request Blood</h2>
+
+<!-- ✅ If user has ROLE_RECIPIENT, show the form -->
+<div sec:authorize="hasAuthority('ROLE_RECIPIENT')">
+
+    <form id="requestBloodForm">
+        <label for="requiredBloodType">Required Blood Type:</label>
+        <select id="requiredBloodType" name="requiredBloodType" required>
+            <option value="">-- Select --</option>
+            <option value="A+">A+</option>
+            <option value="O+">O+</option>
+            <option value="B+">B+</option>
+            <option value="AB+">AB+</option>
+            <option value="A-">A-</option>
+            <option value="O-">O-</option>
+            <option value="B-">B-</option>
+            <option value="AB-">AB-</option>
+        </select>
+
+        <label for="quantity">Quantity (units):</label>
+        <input type="number" id="quantity" name="quantity" required min="1">
+
+        <button type="submit">Submit Request</button>
+    </form>
+
+    <div id="responseMessage"></div>
+
+    <script>
+    document.getElementById("requestBloodForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const requiredBloodType = document.getElementById("requiredBloodType").value;
+        const quantity = document.getElementById("quantity").value;
+
+        fetch("/api/recipients/request-blood", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ requiredBloodType, quantity })
+        })
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("responseMessage").innerText = data;
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            document.getElementById("responseMessage").innerText = "Something went wrong.";
+        });
+    });
+    </script>
+
+</div>
+
+</body>
+</html>

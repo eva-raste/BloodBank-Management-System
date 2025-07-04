@@ -58,7 +58,7 @@ public class DonorService {
     @Transactional
     public Donor registerDonor(Donor donor) {
         // Check if username already exists
-        if (userRepository.findByUsername(donor.getUsername()).isPresent()) {
+        if (donorRepository.findByUsername(donor.getUsername()).isPresent()) {
             throw new RuntimeException("Username already exists");
         }
 
@@ -97,9 +97,7 @@ public class DonorService {
         bloodDonation.setDonor(donor);
         bloodDonation.setBloodType(donor.getBloodType());
         bloodDonation.setTransactionDate(LocalDateTime.now());
-        bloodDonation.setStatus("PENDING");
-        bloodDonation.setTested(false);
-
+       
         bloodDonation.setQuantity(readyToDonate ? 1 : 0);
         bloodDonationRepository.save(bloodDonation);
 
@@ -176,6 +174,10 @@ public class DonorService {
 
         // Save Updated Donor
         return donorRepository.save(existingDonor);
+    }
+
+    public void updateDonor(Donor donor) {
+        donorRepository.save(donor);
     }
 
 

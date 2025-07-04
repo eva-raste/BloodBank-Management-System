@@ -31,10 +31,10 @@ public class BloodDonation {
     private String bloodType;
     private int quantity;
     private LocalDateTime transactionDate;
-    @Column(nullable = false)
-    private String status = "PENDING";  // Values: PENDING, ACCEPTABLE, NOT_ACCEPTABLE
-
-    @Column(nullable = false)
-    private boolean isTested = false;
+//    @Column(nullable = false)
+//    private String status = "PENDING";  // Values: PENDING, ACCEPTABLE, NOT_ACCEPTABLE
+//
+//    @Column(nullable = false)
+//    private boolean isTested = false;
 
 }

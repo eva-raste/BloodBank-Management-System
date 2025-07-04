@@ -41,14 +41,14 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/ai/**").permitAll()
 
                 .requestMatchers(HttpMethod.GET, "/api/donors/all").hasAuthority("ROLE_ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/donors/me").hasAuthority("ROLE_DONOR")
-                .requestMatchers(HttpMethod.GET, "/api/donors/{id}").hasAnyAuthority("ROLE_DONOR", "ROLE_ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/donors/update").hasAuthority("ROLE_DONOR")
-                .requestMatchers(HttpMethod.POST, "/api/donors/donate-blood").hasAuthority("ROLE_DONOR")
-
-                .requestMatchers(HttpMethod.GET, "/api/recipients/me").hasAuthority("ROLE_RECIPIENT")
-                .requestMatchers(HttpMethod.GET, "/api/recipients/{id}").hasAnyAuthority("ROLE_RECIPIENT", "ROLE_ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/recipients/update").hasAuthority("ROLE_RECIPIENT")
+//                .requestMatchers(HttpMethod.GET, "/api/donors/me").hasAuthority("ROLE_DONOR")
+//                .requestMatchers(HttpMethod.GET, "/api/donors/{id}").hasAnyAuthority("ROLE_DONOR", "ROLE_ADMIN")
+//                .requestMatchers(HttpMethod.PUT, "/api/donors/update").hasAuthority("ROLE_DONOR")
+//                .requestMatchers(HttpMethod.POST, "/api/donors/donate-blood").hasAuthority("ROLE_DONOR")
+//
+//                .requestMatchers(HttpMethod.GET, "/api/recipients/me").hasAuthority("ROLE_RECIPIENT")
+//                .requestMatchers(HttpMethod.GET, "/api/recipients/{id}").hasAnyAuthority("ROLE_RECIPIENT", "ROLE_ADMIN")
+//                .requestMatchers(HttpMethod.PUT, "/api/recipients/update").hasAuthority("ROLE_RECIPIENT")
                 .requestMatchers(HttpMethod.POST, "/api/recipients/request-blood").permitAll()
 
                 .requestMatchers(HttpMethod.PUT, "/api/blood-inventory/**").hasAuthority("ROLE_ADMIN")
@@ -56,25 +56,27 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/transactions/all").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/tester/**").hasAuthority("ROLE_TESTER")
 
-                .requestMatchers("/blood-request-form", "/request-blood").permitAll()
+                .requestMatchers("/blood-request-form", "/request-blood").authenticated()
 
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
         );
 
         // ✅ Setup login page
-        http.formLogin(form -> form
-            //.loginPage("/login")
-            .defaultSuccessUrl("/", true)
-            .permitAll()
-        );
-        // ✅ Setup logout
-        http.logout(logout -> logout
-            .logoutSuccessUrl("/login?logout")
-            .permitAll()
+        http
+        .formLogin(form -> form
+            .loginPage("/login")                   // custom login page URL
+            .defaultSuccessUrl("/", true)          // redirect here after successful login, always
+            .permitAll()                           // allow everyone to see login page
+        )
+        .logout(logout -> logout
+            .logoutUrl("/logout")                   // default logout URL (optional)
+            .logoutSuccessUrl("/login?logout")     // redirect after logout
+            .permitAll()                           // allow everyone to access logout URL
         );
 
+
         // ✅ Disable CSRF (only in development)
-      //  http.csrf(csrf -> csrf.disable());
+       http.csrf(csrf -> csrf.disable());
 
         return http.build();
     }

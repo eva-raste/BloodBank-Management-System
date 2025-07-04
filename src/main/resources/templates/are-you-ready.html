@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ready to Donate?</title>
+</head>
+<body>
+    <h1>Are you ready to donate blood?</h1>
+
+    <form th:action="@{/set-ready-to-donate}" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    <button type="submit" name="ready" value="true">Yes</button>
+    <button type="submit" name="ready" value="false">No</button>
+</form>
+
+<script>
+function submitDonation(ready) {
+    fetch("/donate-blood", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ readyToDonate: ready })
+    })
+    .then(response => response.text())
+    .then(data => alert(data))
+    .catch(error => alert("Error: " + error));
+}
+
+
+</script>
+</body>
+</html>
